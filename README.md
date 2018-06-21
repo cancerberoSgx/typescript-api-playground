@@ -25,6 +25,12 @@ Basically is a server side node.js application that let the user input two TypeS
 
  * some specs - like run server and post something to /run and expect some answer. In particular example code with string templates and differen template quotes  like this: tsquery simple example
 
+ * typechecking example using createProgram
+
+ * nice idea: from input editor pass current cursor position / selected text range to main() so we can refactor it!
+
+ * when selecting example reflect the change in the url
+
 
 # Notes / difficulties / learning
 

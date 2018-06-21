@@ -8,5 +8,5 @@
     "strict": false, 
     "esModuleInterop": true
   }, 
-  "exclude": ["assets"]
+  "exclude": ["assets", "test"]
 }

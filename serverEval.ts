@@ -571,11 +571,15 @@ function visit(node: ts.Node, visitor: (node: ts.Node, level: number) => void, l
 function getKindName(kind: ts.SyntaxKind) {
   return (ts as any).SyntaxKind[kind];
 }`
+      }, 
+
+      {
+        name: 'ts-simple-ast rename a lot', 
+        description: 'Example using <a href="https://github.com/dsherret/ts-simple-ast">ts-simple-ast</a> rename() tool - will rename randomly almost every identifier found in the input. Very crazy and heuristic - don\'t try this at home!',
+        replaceInputEditorContentWithReturnValue: true,
+        inputValue:readFileSync('./assets/examples/tsa-rename-test1/input.ts').toString(),
+        codeValue:readFileSync('./assets/examples/tsa-rename-test1/code.ts').toString()
       }
-    
-
-
-
 
 
 ]
