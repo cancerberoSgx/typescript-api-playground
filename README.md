@@ -38,4 +38,9 @@ declare module "typescript"{
 }
 ```
 
+ * tsquery.d.ts : had to run the following to join all .d.ts in one file :
+ 
+ 
+  ```dts-generator --name tsquery --out package-name.d.ts --project /home/sg/git/tsquery```
+
  * server evaluates several .ts that it will execute handlebar template editor.js - for agile development - in production we should do it better

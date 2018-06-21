@@ -1,3 +1,6 @@
+// generated automatically using the command:  
+//  ```dts-generator --name tsquery --out package-name.d.ts --project /home/sg/git/tsquery```
+
 declare module '@phenomnomnominal/tsquery/src/ast' {
 	import { SourceFile } from 'typescript';
 	export function createAST(text: string, fileName?: string): SourceFile;

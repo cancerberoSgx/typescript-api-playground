@@ -426,7 +426,156 @@ function main(source: string, log: (m: string) => void): string | void {
   const nodes = tsquery(ast, 'Identifier[name="Animal"]');
   log(\`Identifier[name="Animal"] count: \${nodes.length}\`);
 }`
+    },
+
+    {
+    
+      name: 'Creating a ts.Program and SourceFile in memory for testing without file system' , 
+        description: 'Ideal for testing or using APIs in memory. Also, a small mostration on how to navegate the AST',
+        inputValue:`import * as fs from "fs";
+import * as ts from "typescript";
+function watch(rootFileNames: string[], options: ts.CompilerOptions) {
+  const files: ts.MapLike<{ version: number }> = {};
+  rootFileNames.forEach(fileName => {
+      files[fileName] = { version: 0 };
+  });
+  const servicesHost: ts.LanguageServiceHost = {
+    getScriptFileNames: () => rootFileNames,
+    getScriptVersion: (fileName) => files[fileName] && files[fileName].version.toString(),
+    getScriptSnapshot: (fileName) => {
+        if (!fs.existsSync(fileName)) {
+            return undefined;
+        }
+        return ts.ScriptSnapshot.fromString(fs.readFileSync(fileName).toString());
+    },
+    getCurrentDirectory: () => process.cwd(),
+    getCompilationSettings: () => options,
+    getDefaultLibFileName: (options) => ts.getDefaultLibFilePath(options),
+    fileExists: ts.sys.fileExists,
+    readFile: ts.sys.readFile,
+    readDirectory: ts.sys.readDirectory,
+  };
+  const services = ts.createLanguageService(servicesHost, ts.createDocumentRegistry())
+  rootFileNames.forEach(fileName => {
+    emitFile(fileName);
+    fs.watchFile(fileName,
+        { persistent: true, interval: 250 },
+        (curr, prev) => {
+            if (+curr.mtime <= +prev.mtime) {
+                return;
+            }
+            files[fileName].version++;        
+            emitFile(fileName);
+        });
+  });
+  function emitFile(fileName: string) {
+    let output = services.getEmitOutput(fileName);
+    if (!output.emitSkipped) {
+        console.log(\`Emitting \${fileName}\`);
     }
+    else {
+        console.log(\`Emitting \${fileName} failed\`);
+        logErrors(fileName);
+    }
+    output.outputFiles.forEach(o => {
+        fs.writeFileSync(o.name, o.text, "utf8");
+    });
+  }
+  function logErrors(fileName: string) {
+    let allDiagnostics = services.getCompilerOptionsDiagnostics()
+        .concat(services.getSyntacticDiagnostics(fileName))
+        .concat(services.getSemanticDiagnostics(fileName));
+    allDiagnostics.forEach(diagnostic => {
+        let message = ts.flattenDiagnosticMessageText(diagnostic.messageText, "\\n");
+        if (diagnostic.file) {
+            let { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start!);
+            console.log(\`  Error \${diagnostic.file.fileName} (\${line + 1},\${character + 1}): \${message}\`);
+        }
+        else {
+            console.log(\`  Error: \${message}\`);
+        }
+    });
+  }
+}
+const currentDirectoryFiles = fs.readdirSync(process.cwd()).
+    filter(fileName => fileName.length >= 3 && fileName.substr(fileName.length - 3, 3) === ".ts");
+watch(currentDirectoryFiles, { module: ts.ModuleKind.CommonJS });`,
+
+        codeValue: `import * as ts from 'typescript'
+export function main(code: string, log: (msg: string) => void) {
+  const program = createProgram([
+    { fileName: 'one.ts', content: \`class Animal {
+      constructor(public name: string) { }
+      move(distanceInMeters: number = 0) {
+        console.log(\\\`\\\${this.name} moved \\\${distanceInMeters}m.\\\`)
+      }
+    }
+    class Snake extends Animal {
+      constructor(name: string) { super(name); }
+      move(distanceInMeters = 5) {
+          console.log("Slithering...");
+          super.move(distanceInMeters);
+      }
+    }\` },
+    { fileName: 'two.ts', content: 'class A{color: string="red"; method2(l: Date[][]):number{if(l<new Date())return 1+1+1}}' },
+    { fileName: 'third.ts', content: code }
+  ])
+  program.getSourceFiles().forEach(sourceFile => {
+    log(\`=== AST of \${sourceFile.fileName} ===\`)
+    visit(sourceFile, (n, level) => log(printNode(n, level)))
+  })
+}
+
+function printNode (n: ts.Node, level: number = 0):string {
+  const text = n.getText().replace(/[\\n\\s]+/gm, ' ')
+  return \`\${new Array(level * 2).fill(' ').join('')}\${getKindName(n.kind)} - "\${text.substring(0, Math.min(text.length, 20))}"\`
+}
+/** creates a dummy ts.Program in memory with given source files inside */
+export function createProgram(files: {
+  fileName: string, content: string,
+  sourceFile?: ts.SourceFile
+}[], compilerOptions?: ts.CompilerOptions): ts.Program {
+  const tsConfigJson = ts.parseConfigFileTextToJson('tsconfig.json',
+    compilerOptions ? JSON.stringify(compilerOptions) : \`{
+    "compilerOptions": {
+      "target": "es2018",   
+      "module": "commonjs", 
+      "lib": ["es2018"],
+      "rootDir": ".",
+      "strict": false,   
+      "esModuleInterop": true,
+    }
+  }\`)
+  let { options, errors } = ts.convertCompilerOptionsFromJson(tsConfigJson.config.compilerOptions, '.')
+  if (errors.length) {
+    throw errors
+  }
+  const compilerHost = ts.createCompilerHost(options)
+  compilerHost.getSourceFile = function (fileName: string, languageVersion: ts.ScriptTarget, onError?: (message: string) => void, shouldCreateNewSourceFile?: boolean): ts.SourceFile | undefined {
+    const file = files.find(f => f.fileName === fileName)
+    if (!file) return undefined
+    file.sourceFile = file.sourceFile || ts.createSourceFile(fileName, file.content, ts.ScriptTarget.ES2015, true)
+    return file.sourceFile
+  }
+  return ts.createProgram(files.map(f => f.fileName), options, compilerHost)
+}
+
+function visit(node: ts.Node, visitor: (node: ts.Node, level: number) => void, level: number = 0) {
+  if (!node) {
+    return;
+  }
+  visitor(node, level);
+  node.forEachChild(child => visit(child, visitor, level + 1));
+}
+
+function getKindName(kind: ts.SyntaxKind) {
+  return (ts as any).SyntaxKind[kind];
+}`
+      }
+    
+
+
+
 
 
 ]
