@@ -1,6 +1,5 @@
 import {spawn} from 'child_process'
 
-
 export function runTs(code, input) {
   return new Promise(resolve => {
     let s = `

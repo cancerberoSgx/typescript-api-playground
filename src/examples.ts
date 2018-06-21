@@ -1,14 +1,17 @@
+import { readFileSync } from './readFileSync'
+import { mode } from './config';
 
- 
-import {readFileSync} from './readFileSync'
- 
 let codeExamples
-export  function getExamples(){
+export function getExamples() {
 
+  if (codeExamples && mode === 'production') {
+    return codeExamples
+  }
+  
   codeExamples = [
     {
-      name: 'TypeScript scanner', 
-      description: 'Not very useful but shows Scanned API. Taken from <a href="https://basarat.gitbooks.io/typescript/content/docs/compiler/scanner.html">TypeScript book</a>', 
+      name: 'TypeScript scanner',
+      description: 'Not very useful but shows Scanned API. Taken from <a href="https://basarat.gitbooks.io/typescript/content/docs/compiler/scanner.html">TypeScript book</a>',
       inputValue: `class A {
   color: string
   method (a: number, b: Date[][]): Promise<void> {
@@ -37,12 +40,12 @@ export function main(code:string, log: (msg:string)=>void) {
 function getKindName(kind: ts.SyntaxKind) {
   return (ts as any).SyntaxKind[kind];
 } 
-  `}, 
-    
-    
-  {
-      name: 'Simple Transformation', 
-      description: 'Using TypeScript transformation API we change all property access expression like "foo.bar" so when "bar" has the name "accessorToBeRemoved" we leave only "foo". See how the example code changes after run it', 
+  `},
+
+
+    {
+      name: 'Simple Transformation',
+      description: 'Using TypeScript transformation API we change all property access expression like "foo.bar" so when "bar" has the name "accessorToBeRemoved" we leave only "foo". See how the example code changes after run it',
       replaceInputEditorContentWithReturnValue: true,
       inputValue: `const foo = {
   method1(s: any){}, 
@@ -54,7 +57,7 @@ foo.method1(foo.accessorToBeRemoved)
 foo.otherProperty = null
 foo.accessorToBeRemoved = null
   `,
-      
+
       codeValue: `import * as ts from 'typescript'
 function main(source: string, log: (msg:string)=>void){
   const sourceFile: ts.SourceFile = ts.createSourceFile(
@@ -86,9 +89,9 @@ const transformer = <T extends ts.Node>(context: ts.TransformationContext) => {
 }
   `
     },
-    
+
     {
-      name: 'Transformation 2', 
+      name: 'Transformation 2',
       description: 'More complex example of using TypeScript Transformation API. See comments in the code for details. Heads up, the example sources changes after run completes.',
       replaceInputEditorContentWithReturnValue: true,
       inputValue: `class Foo {
@@ -98,14 +101,14 @@ const transformer = <T extends ts.Node>(context: ts.TransformationContext) => {
 }
 const value = new Foo().magic2(1 + 2 + 3)`,
       codeValue: readFileSync('./assets/examples/ts-transformation-2/code.ts').toString()
-    }, 
-    
-  
+    },
+
+
     {
-      name: 'Transformation 3', 
+      name: 'Transformation 3',
       description: 'Another Transformation API example that will add new nodes, this time putting a name to functions declared without name',
       replaceInputEditorContentWithReturnValue: true,
-      inputValue:`function(a: number):[number]{
+      inputValue: `function(a: number):[number]{
   return [Math.PI*a/2]
 }
 function named(b:string){
@@ -117,7 +120,7 @@ const alsoWithName = function(){
 }; 
 (function (a: number) { return a + 1; })(5); // and with this one
   `,
-    codeValue: `import * as ts from 'typescript';
+      codeValue: `import * as ts from 'typescript';
 // since having function declarations without name is an error in TypeScript this transformation will put them name
 function main(source: string, log: (m: string)=>void):string {
   let nameCounter = 0
@@ -150,23 +153,23 @@ function main(source: string, log: (m: string)=>void):string {
 }
   `
     },
-    
+
     {
-    
-    name: 'Build and print AST programmatically' , 
+
+      name: 'Build and print AST programmatically',
       description: 'Using TypeScript Compiler API to "write" code by creating a AST from code data-structures. Prints the result out, in this case, a working factorial function, taken from <a href="https://github.com/Microsoft/TypeScript/wiki/Using-the-Compiler-API#user-content-creating-and-printing-a-typescript-ast">TypeScript Compiler API docs</a>',
       replaceInputEditorContentWithReturnValue: true,
-      inputValue:``,
+      inputValue: ``,
       codeValue: readFileSync('./assets/examples/ts-build-and-print-ast/code.ts').toString()
-    }, 
-    
-    
+    },
+
+
     {
-    
-    name: 'Transpiling-a-single-file' , 
+
+      name: 'Transpiling-a-single-file',
       description: 'Using TypeScript Compiler API To transpile a single file to JavaScript. Tken from <a href="https://github.com/Microsoft/TypeScript/wiki/Using-the-Compiler-API#transpiling-a-single-file">TypeScript Compiler API docs</a>',
       replaceInputEditorContentWithReturnValue: true,
-      inputValue:`import {foo} from 'foo'
+      inputValue: `import {foo} from 'foo'
 export const f = (obj: {d: boolean}): {a: number, b: Date, d:boolean} => {
   for(let d of [new Date()]){
     foo(d)
@@ -184,12 +187,12 @@ function main(source: string, log: (m: string) => void): string {
   return res2
 }`
     },
-  
+
     {
-    
-      name: 'tsquery simple example' , 
-        description: 'Using <a href="https://github.com/phenomnomnominal/tsquery">tsquery library</a> to count Identifiers with a certain name',
-        inputValue:`class Animal {
+
+      name: 'tsquery simple example',
+      description: 'Using <a href="https://github.com/phenomnomnominal/tsquery">tsquery library</a> to count Identifiers with a certain name',
+      inputValue: `class Animal {
   constructor(public name: string) { }
   move(distanceInMeters: number = 0) {
     console.log( \`\${this.name} moved \${distanceInMeters}m.\`)
@@ -202,7 +205,7 @@ class Snake extends Animal {
       super.move(distanceInMeters);
   }
 }`,
-        codeValue: `import { tsquery } from '@phenomnomnominal/tsquery';
+      codeValue: `import { tsquery } from '@phenomnomnominal/tsquery';
 function main(source: string, log: (m: string) => void): string | void {
   const ast = tsquery.ast(source);
   const nodes = tsquery(ast, 'Identifier[name="Animal"]');
@@ -211,25 +214,20 @@ function main(source: string, log: (m: string) => void): string | void {
     },
 
     {
-      name: 'Creating a ts.Program and SourceFile in memory for testing without file system' , 
+      name: 'Creating a ts.Program and SourceFile in memory for testing without file system',
       description: 'Ideal for testing or using APIs in memory. Also, a small mostration on how to navegate the AST',
-      inputValue:readFileSync('./assets/examples/ts-create-program-without-fs/input.ts').toString(),
+      inputValue: readFileSync('./assets/examples/ts-create-program-without-fs/input.ts').toString(),
       codeValue: readFileSync('./assets/examples/ts-create-program-without-fs/code.ts').toString()
-    }, 
+    },
 
     {
-      name: 'ts-simple-ast rename a lot', 
+      name: 'ts-simple-ast rename a lot',
       description: 'Example using <a href="https://github.com/dsherret/ts-simple-ast">ts-simple-ast</a> rename() tool - will rename randomly almost every identifier found in the input. Very crazy and heuristic - don\'t try this at home!',
       replaceInputEditorContentWithReturnValue: true,
-      inputValue:readFileSync('./assets/examples/tsa-rename-test1/input.ts').toString(),
-      codeValue:readFileSync('./assets/examples/tsa-rename-test1/code.ts').toString()
+      inputValue: readFileSync('./assets/examples/tsa-rename-test1/input.ts').toString(),
+      codeValue: readFileSync('./assets/examples/tsa-rename-test1/code.ts').toString()
     }
-  
-  
   ]
-  
-  
-  
-  
-   return codeExamples
-   } 
+
+  return codeExamples
+} 

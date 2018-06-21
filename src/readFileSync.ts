@@ -1,5 +1,5 @@
-import {readFileSync as realReadFileSync} from 'fs'
+import { readFileSync as realReadFileSync } from 'fs'
 
- export function readFileSync(fileName: string){
+export function readFileSync(fileName: string) {
   return realReadFileSync(fileName)
 }
