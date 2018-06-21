@@ -1,0 +1,32 @@
+{
+  "name": "typescript-api-online-editor",
+  "version": "0.0.1",
+  "description": "TypeScript compiler API and others online playground: https://online-typescript-api-editor.glitch.me/)",
+  "scripts": {
+    "start": "ts-node server.ts"
+  },
+  "engines": {
+    "node": "10.x"
+  },
+  "repository": "https://github.com/cancerberoSgx/typescript-plugins-of-mine/tree/master/typescript-api-online-editor",
+  "license": "MIT",
+  "dependencies": {
+    "@phenomnomnominal/tsquery": "^2.0.0-beta.4",
+    "handlebars": "^4.0.11",
+    "ts-simple-ast": "12.4.0",
+    "typescript": "2.9.1"
+  },
+  "devDependencies": {
+    "ts-node": "^6.1.0",
+    "@types/node": "^10.0.4"
+  },
+  "keywords": [
+    "node",
+    "glitch",
+    "typescript",
+    "typescript compiler api",
+    "typescript playground",
+    "online editor",
+    "typescript API"
+  ]
+}
