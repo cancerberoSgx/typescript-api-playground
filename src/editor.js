@@ -1,8 +1,9 @@
 var typeScriptCodeEditor, exampleCodeEditor
  
+
+// code examples
+
 const codeExamples = {{{examplesString}}};
-
-
 function changeExample(name){
   const found = codeExamples.find(e=>e.name===name)
   if(!found){
@@ -24,6 +25,13 @@ function setExampleFromUrlParameter(){
 function setWorkingAnimation(working){
   document.getElementById('working-animation').style.display = working ? 'inline-block' : 'none'
 }
+
+
+
+
+
+// run typescript code handlers
+
 function typeScriptCodeRun(){
   const body = {
     input: exampleCodeEditor.getModel().getValue(), 
@@ -66,7 +74,6 @@ function typeScriptCodeRun(){
   })
   
 }
-
 function formatResult(text){
   let result 
   try {
@@ -96,6 +103,9 @@ ${result.err.join('\n')}
   }
 }
 
+
+// editor creation / configuration
+
 require(["vs/editor/editor.main"], function () {
   
   setExampleFromUrlParameter()
@@ -120,14 +130,11 @@ require(["vs/editor/editor.main"], function () {
       baseUrl: "."
   })
   
-  
-  
   // loading libraries
   {{#each libs}}
   monaco.languages.typescript.typescriptDefaults.addExtraLib.apply(  monaco.languages.typescript.typescriptDefaults, {{{this}}})
   {{/each}}
-    
-    
+  
   const editorOptions = {
     fontSize: '12px',
     language: 'typescript', 
@@ -141,8 +148,6 @@ require(["vs/editor/editor.main"], function () {
   exampleCodeEditor = monaco.editor.create(exampleCodeContainer, Object.assign(editorOptions, {value: example.inputValue}))
   installResizeWatcher(exampleCodeContainer, exampleCodeEditor.layout.bind(exampleCodeEditor), 2000)
 })
-
-
 
 function installResizeWatcher(el, fn, interval){
   let offset = {width: el.offsetWidth, height: el.offsetHeight}

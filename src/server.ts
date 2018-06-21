@@ -1,18 +1,10 @@
-import * as fs from 'fs'
 import http from 'http'
 
-//(process as any).isDevelopment = true
-
-//function readFileSync(name){
-  //if((process as any).isDevelopment){
-//    return fs.readFileSync
-  //}
-//}
+//(process as any).isDevelopment = 
 
 function onRequest(request, response) {
-  const readFileSync = require('fs').readFileSync
-  const fn = eval(` ( ${readFileSync('./src/serverEval.ts').toString()} )`)
-  fn(request, response, readFileSync)
+  const fn = require('./serverEval').fn
+  fn(request, response)
 }
 const port = process.env.PORT || 8080
 const url = process.env.PORT ? 'https://online-typescript-api-editor.glitch.me' : 'http://localhost:8080'
