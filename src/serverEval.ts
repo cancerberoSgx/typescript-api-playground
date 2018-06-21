@@ -326,60 +326,11 @@ function main(source: string, log: (m: string)=>void):string {
   
   {
   
-  name: 'Build and print AST programatically' , 
-    description: 'Using TypeScript Compiler API to build an AST programaticay and printing the result out, in this case a working factorial function, taken from <a href="https://github.com/Microsoft/TypeScript/wiki/Using-the-Compiler-API#user-content-creating-and-printing-a-typescript-ast">TypeScript Compiler API docs</a>',
+  name: 'Build and print AST programmatically' , 
+    description: 'Using TypeScript Compiler API to "write" code by creating a AST from code data-structures. Prints the result out, in this case, a working factorial function, taken from <a href="https://github.com/Microsoft/TypeScript/wiki/Using-the-Compiler-API#user-content-creating-and-printing-a-typescript-ast">TypeScript Compiler API docs</a>',
     replaceInputEditorContentWithReturnValue: true,
     inputValue:``,
-    codeValue: `import * as ts from 'typescript';
-
-function makeFactorialFunction() {
-  const functionName = ts.createIdentifier("factorial");
-  const paramName = ts.createIdentifier("n");
-  const parameter = ts.createParameter(
-      /*decorators*/ undefined,
-      /*modifiers*/ undefined,
-      /*dotDotDotToken*/ undefined,
-      paramName);
-
-  const condition = ts.createBinary(
-      paramName,
-      ts.SyntaxKind.LessThanEqualsToken,
-      ts.createLiteral(1));
-
-  const ifBody = ts.createBlock(
-      [ts.createReturn(ts.createLiteral(1))],
-      /*multiline*/ true)
-  const decrementedArg = ts.createBinary(paramName, ts.SyntaxKind.MinusToken, ts.createLiteral(1))
-  const recurse = ts.createBinary(
-      paramName,
-      ts.SyntaxKind.AsteriskToken,
-      ts.createCall(functionName, /*typeArgs*/undefined, [decrementedArg]));
-  const statements = [
-      ts.createIf(condition, ifBody),
-      ts.createReturn(
-          recurse
-      ),
-  ];
-  return ts.createFunctionDeclaration(
-      /*decorators*/ undefined,
-      /*modifiers*/[ts.createToken(ts.SyntaxKind.ExportKeyword)],
-      /*asteriskToken*/ undefined,
-      functionName,
-      /*typeParameters*/ undefined,
-      [parameter],
-      /*returnType*/ ts.createKeywordTypeNode(ts.SyntaxKind.NumberKeyword),
-      ts.createBlock(statements, /*multiline*/ true),
-  )
-}
-
-function main(source: string, log: (m: string)=>void):string {
-  const resultFile = ts.createSourceFile("someFileName.ts", "", ts.ScriptTarget.Latest, /*setParentNodes*/ false, ts.ScriptKind.TS);
-  const printer = ts.createPrinter({
-    newLine: ts.NewLineKind.LineFeed,
-  });
-  const result = printer.printNode(ts.EmitHint.Unspecified, makeFactorialFunction(), resultFile);
-  return result
-}`
+    codeValue: readFileSync('./assets/examples/ts-build-and-print-ast/code.ts').toString()
   }, 
   
   
@@ -389,7 +340,6 @@ function main(source: string, log: (m: string)=>void):string {
     description: 'Using TypeScript Compiler API To transpile a single file to JavaScript. Tken from <a href="https://github.com/Microsoft/TypeScript/wiki/Using-the-Compiler-API#transpiling-a-single-file">TypeScript Compiler API docs</a>',
     replaceInputEditorContentWithReturnValue: true,
     inputValue:`import {foo} from 'foo'
-
 export const f = (obj: {d: boolean}): {a: number, b: Date, d:boolean} => {
   for(let d of [new Date()]){
     foo(d)
@@ -397,7 +347,6 @@ export const f = (obj: {d: boolean}): {a: number, b: Date, d:boolean} => {
   return {a: 1, b: new Date(), ... obj}
 }`,
     codeValue: `import * as ts from 'typescript';
-
 function main(source: string, log: (m: string) => void): string {
   var compilerOptions = { module: ts.ModuleKind.System };
   var res1 = ts.transpileModule(source, { compilerOptions: compilerOptions, moduleName: "myModule2" });
@@ -435,7 +384,6 @@ function main(source: string, log: (m: string) => void): string | void {
     },
 
     {
-    
       name: 'Creating a ts.Program and SourceFile in memory for testing without file system' , 
       description: 'Ideal for testing or using APIs in memory. Also, a small mostration on how to navegate the AST',
       inputValue:readFileSync('./assets/examples/ts-create-program-without-fs/input.ts').toString(),
