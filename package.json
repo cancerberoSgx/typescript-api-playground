@@ -1,9 +1,9 @@
 {
   "name": "typescript-api-online-editor",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "TypeScript compiler API and others online playground: https://typescript-api-playground.glitch.me/",
   "scripts": {
-    "start": "ts-node server.ts"
+    "start": "ts-node ./src/server.ts"
   },
   "engines": {
     "node": "10.x"

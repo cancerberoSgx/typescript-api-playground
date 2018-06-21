@@ -21,9 +21,15 @@ Basically is a server side node.js application that let the user input two TypeS
 
 # TODO
 
- * user being able to save / load its work - cheap solution like typescript playground use url parameters as source code input. 
+ * user being able to save / load its work - cheap solution like typescript playground use url parameters as source code input. Maybe a list in the server  in a file ? 
 
- * some specs - like run server and post something to /run and expect some answer. In particular example code with string templates and differen template quotes  like this: tsquery simple example
+ * Production , performance, security: we are eval() and compiling / rendering templates on each request for fast development - we need a production mode that dont do this, caches everything in memory. 
+ 
+  * make some specs - like run server and post something to /run and expect some answer. In particular example code with string templates and different template quotes  like this: tsquery simple example
+
+  * a help dialog or alert with minimal instructions
+
+  * better example tagging and sorting
 
  * typechecking example using createProgram
 
@@ -34,7 +40,7 @@ Basically is a server side node.js application that let the user input two TypeS
 
 # Notes / difficulties / learning
 
- * editor.js - is a handlebars template that contains big ibraries like typescript.d.ts embedded inside
+ * editor.js - is a handlebars template that contains big ibraries like typescript.d.ts embedded inside - now trying to migrate reading files and fixing production cache.
 
  * ts-simple-ast.d.ts needed little modification at the begginig of the heads (see comments ) and explicit declaration using compilerOptions path and baseUrl (see editor.js monaco.languages.typescript.typescriptDefaults.setCompilerOptions )
  
@@ -47,8 +53,5 @@ declare module "typescript"{
 ```
 
  * tsquery.d.ts : had to run the following to join all .d.ts in one file :
- 
- 
+  
   ```dts-generator --name tsquery --out package-name.d.ts --project /home/sg/git/tsquery```
-
- * server evaluates several .ts that it will execute handlebar template editor.js - for agile development - in production we should do it better

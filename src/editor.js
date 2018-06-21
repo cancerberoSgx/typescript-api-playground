@@ -1,14 +1,5 @@
 var typeScriptCodeEditor, exampleCodeEditor
-
-const inputValue1 = `class A {
-  color: string
-  method (a: number, b: Date[][]): Promise<void> {
-    return Promise.resolve()
-  }
-}
-const a = new A()
-`
-
+ 
 const codeExamples = {{{examplesString}}};
 
 
@@ -27,14 +18,17 @@ function setExampleFromUrlParameter(){
   const exampleIndex = parseInt(new URL(location.href).searchParams.get("example")||'0', 10)||0
   example = codeExamples[exampleIndex]
   if(!example){
-    alert('example '+exampleIndex+' not found - showing default example'); example = codeExamples[0]
+    alert('Example '+exampleIndex+' not found - showing default example'); example = codeExamples[0]
   }
 }
 function setWorkingAnimation(working){
   document.getElementById('working-animation').style.display = working ? 'inline-block' : 'none'
 }
 function typeScriptCodeRun(){
-  const body = {input: exampleCodeEditor.getModel().getValue(), code: typeScriptCodeEditor.getModel().getValue()}
+  const body = {
+    input: exampleCodeEditor.getModel().getValue(), 
+    code: typeScriptCodeEditor.getModel().getValue()
+  }
   setWorkingAnimation(true)
   fetch('/run', {method: 'post', body: JSON.stringify(body)})
     .then(response=>response.blob())
@@ -134,14 +128,29 @@ require(["vs/editor/editor.main"], function () {
   {{/each}}
     
     
-  
   const editorOptions = {
     fontSize: '12px',
-    language: 'typescript'
+    language: 'typescript', 
+    minimap: {enabled: false}
   }
-  typeScriptCodeEditor = monaco.editor.create(document.getElementById('typeScriptCodeContainer'), Object.assign(editorOptions, {value: example.codeValue}))
-    
-  exampleCodeEditor = monaco.editor.create(document.getElementById('exampleCodeContainer'), Object.assign(editorOptions, {value: example.inputValue}))
-  
+
+  const typeScriptCodeContainer = document.getElementById('typeScriptCodeContainer')
+  typeScriptCodeEditor = monaco.editor.create(typeScriptCodeContainer, Object.assign(editorOptions, {value: example.codeValue}))
+  installResizeWatcher(typeScriptCodeContainer, typeScriptCodeEditor.layout.bind(typeScriptCodeEditor), 2000)
+  const exampleCodeContainer = document.getElementById('exampleCodeContainer')
+  exampleCodeEditor = monaco.editor.create(exampleCodeContainer, Object.assign(editorOptions, {value: example.inputValue}))
+  installResizeWatcher(exampleCodeContainer, exampleCodeEditor.layout.bind(exampleCodeEditor), 2000)
 })
 
+
+
+function installResizeWatcher(el, fn, interval){
+  let offset = {width: el.offsetWidth, height: el.offsetHeight}
+  setInterval(()=>{
+    let newOffset = {width: el.offsetWidth, height: el.offsetHeight}
+    if(offset.height!=newOffset.height||offset.width!=newOffset.width){
+      offset = newOffset
+      fn()
+    }
+  }, interval)
+}

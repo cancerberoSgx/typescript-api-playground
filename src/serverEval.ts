@@ -1,3 +1,12 @@
+
+/*
+heads up! It is the server implementation required by Server.ts on each request so responses changes per-request. Is mostly responsible of: 
+
+ * know where all the files are (templates, example files, declaration files)
+ * compile and render templates (index.htl and editor.js) that are consumer on the front end
+ * on development mode this happens on each request on production templates and files reading is cached
+*/
+
 function fn(request, response, readFileSync2){
  
   const readFileSync = require('fs').readFileSync
@@ -38,8 +47,6 @@ function fn(request, response, readFileSync2){
   
   
 function runTs(code, input){
-
-  // const asString = JSON.stringify({code, input})
   
   return new Promise(resolve=>{
     let s = `
@@ -79,15 +86,15 @@ function runTs(code, input){
   function compileTemplates(){
   const handlebars = require('handlebars')
     return {
-      editorJs: handlebars.compile(readFileSync('./editor.js').toString()), 
-      indexHtml: handlebars.compile(readFileSync('./index.html').toString())
+      editorJs: handlebars.compile(readFileSync('./src/editor.js').toString()), 
+      indexHtml: handlebars.compile(readFileSync('./src/index.html').toString())
     }    
   }
   function getTemplatesContext(){
     const libs = ['typescript.d.ts', 'ts-simple-ast.d.ts','node.d.ts', 'tsquery.d.ts']
     const examples = getExamples()
     return {
-      libs: libs.map(l=>JSON.stringify([readFileSync(`./assets/${l}`).toString(), `libs/${l}`])), 
+      libs: libs.map(l=>JSON.stringify([readFileSync(`./assets/declarations/${l}`).toString(), `libs/${l}`])), 
       examples, examplesString: JSON.stringify(examples)
     }
   }

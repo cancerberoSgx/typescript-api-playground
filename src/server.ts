@@ -11,7 +11,7 @@ import http from 'http'
 
 function onRequest(request, response) {
   const readFileSync = require('fs').readFileSync
-  const fn = eval(` ( ${readFileSync('./serverEval.ts').toString()} )`)
+  const fn = eval(` ( ${readFileSync('./src/serverEval.ts').toString()} )`)
   fn(request, response, readFileSync)
 }
 const port = process.env.PORT || 8080
