@@ -29,6 +29,8 @@ Basically is a server side node.js application that let the user input two TypeS
 # Notes / difficulties / learning
 
  * editor.js - is a handlebars template that contains big ibraries like typescript.d.ts embedded inside
+
+ * ts-simple-ast.d.ts needed little modification at the begginig of the heads (see comments ) and explicit declaration using compilerOptions path and baseUrl (see editor.js monaco.languages.typescript.typescriptDefaults.setCompilerOptions )
  
  * for typescript.d.ts to work we need to add the following to the top of the file:
 

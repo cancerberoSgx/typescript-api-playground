@@ -84,7 +84,7 @@ function runTs(code, input){
     }    
   }
   function getTemplatesContext(){
-    const libs = ['typescript.d.ts', /*'ts-simple-ast.d.ts', */'node.d.ts', 'tsquery.d.ts']
+    const libs = ['typescript.d.ts', 'ts-simple-ast.d.ts','node.d.ts', 'tsquery.d.ts']
     const examples = getExamples()
     return {
       libs: libs.map(l=>JSON.stringify([readFileSync(`./assets/${l}`).toString(), `libs/${l}`])), 

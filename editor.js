@@ -107,23 +107,23 @@ require(["vs/editor/editor.main"], function () {
   setExampleFromUrlParameter()
     
   // validation settings
-  monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
-    noSemanticValidation: false,
-    noSyntaxValidation: false
-  })
+  // monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
+    // noSemanticValidation: false,
+    // noSyntaxValidation: false
+  // })
 
   // compiler options
-  monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
+  monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
     target: monaco.languages.typescript.ScriptTarget.ES6,
-      "module": "commonjs",
-      "lib": ["es2018"],
+      module: "commonjs",
+      lib: ["es2018"],
       allowNonTsExtensions: true ,
-      "strict": false,
-    "rootDir": ".",
-  /*  "baseUrl": ".", // This must be specified if "paths" is.
-    "paths": {
-      "ts-simple-ast": ["libs/ts-simple-ast"]
-    }*/
+      strict: false,
+      rootDir: ".",
+      paths: {
+        "ts-simple-ast":["libs/ts-simple-ast.d.ts"] // needed for monaco to support ts-simple-ast.d.ts since doesn't declare a module
+      },
+      baseUrl: "."
   })
   
   
