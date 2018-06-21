@@ -52,6 +52,11 @@ function typeScriptCodeRun(){
         }
       })
     })
+    .catch(ex=>{
+      setWorkingAnimation(false)
+      alert('Error in the server: ' + ex)
+      throw ex
+    })
   .then(responseData=>{
     const {result, text} = formatResult(responseData)
     document.getElementById('result').innerText = text
@@ -61,15 +66,25 @@ function typeScriptCodeRun(){
     setWorkingAnimation(false)
   })
   .catch(ex=>{
-    alert('Error in the server: ' + ex)
     setWorkingAnimation(false)
+    alert('Error parsing response: ' + ex)
+    throw ex
   })
+  
 }
 
 function formatResult(text){
-  const result = JSON.parse(text)
+  let result 
+  try {
+  result = JSON.parse(text)
+  if(!result.out||result.out.length===0){
+    result.out = ['{"log": [], "returnValue": ""}']
+  }
   result.out=JSON.parse(result.out[0])
-  
+  }catch(ex){
+    console.log( 'Invalid JSON: **' + text + '**')
+    throw ex
+  }
   return {
     result, 
     text: `RETURN VALUE: 

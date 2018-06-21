@@ -1,14 +1,14 @@
 {
   "name": "typescript-api-online-editor",
   "version": "0.0.1",
-  "description": "TypeScript compiler API and others online playground: https://online-typescript-api-editor.glitch.me/)",
+  "description": "TypeScript compiler API and others online playground: https://typescript-api-playground.glitch.me/",
   "scripts": {
     "start": "ts-node server.ts"
   },
   "engines": {
     "node": "10.x"
   },
-  "repository": "https://github.com/cancerberoSgx/typescript-plugins-of-mine/tree/master/typescript-api-online-editor",
+  "repository": "https://github.com/cancerberoSgx/typescript-api-playground",
   "license": "MIT",
   "dependencies": {
     "@phenomnomnominal/tsquery": "^2.0.0-beta.4",

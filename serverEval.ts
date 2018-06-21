@@ -38,11 +38,14 @@ function fn(request, response, readFileSync2){
   
   
 function runTs(code, input){
+
+  // const asString = JSON.stringify({code, input})
+  
   return new Promise(resolve=>{
     let s = `
     const __logBuffer = []
     const __log = (m)=>__logBuffer.push(m)
-    const __input = \`${input.replace(/`/gm, '\\`')}\`;
+    const __input = ${JSON.stringify(input) /* dont change this or you will break it */};
     ${code}
     const __result = {returnValue: main(__input, __log), log: __logBuffer}
     console.log(JSON.stringify(__result))
@@ -61,6 +64,8 @@ function runTs(code, input){
 
     tsNode.stderr.on('data', (data) => {
       status.err.push(data.toString())
+      console.log('Error Running code: ***'+data+'***');
+      console.log('Code was: ***'+s+'***');
     });
 
     tsNode.on('close', (code) => {
@@ -79,7 +84,7 @@ function runTs(code, input){
     }    
   }
   function getTemplatesContext(){
-    const libs = ['typescript.d.ts', /*'ts-simple-ast.d.ts', */'node.d.ts']
+    const libs = ['typescript.d.ts', /*'ts-simple-ast.d.ts', */'node.d.ts', 'tsquery.d.ts']
     const examples = getExamples()
     return {
       libs: libs.map(l=>JSON.stringify([readFileSync(`./assets/${l}`).toString(), `libs/${l}`])), 
@@ -88,20 +93,19 @@ function runTs(code, input){
   }
   
  function getExamples(){
-   const inputValue1 = `class A {
-  color: string
-  method (a: number, b: Date[][]): Promise<void> {
-    return Promise.resolve()
-  }
-}
-const a = new A()
-`
 
 const codeExamples = [
   {
     name: 'TypeScript scanner', 
     description: 'Not very useful but shows Scanned API. Taken from <a href="https://basarat.gitbooks.io/typescript/content/docs/compiler/scanner.html">TypeScript book</a>', 
-    inputValue: inputValue1,
+    inputValue: `class A {
+      color: string
+      method (a: number, b: Date[][]): Promise<void> {
+        return Promise.resolve()
+      }
+    }
+    const a = new A()
+    `,
     codeValue: `import * as ts from 'typescript'
 
 // export a function main like this and the code at the right will be passed as parameter
@@ -397,10 +401,32 @@ function main(source: string, log: (m: string) => void): string {
   log(res2);
   return res2
 }`
+  },
+
+  {
+  
+    name: 'tsquery simple example' , 
+      description: 'Using <a href="https://github.com/phenomnomnominal/tsquery">tsquery library</a> to count Identifiers with a certain name',
+      inputValue:`class Animal {
+  constructor(public name: string) { }
+  move(distanceInMeters: number = 0) {
+    console.log( \`\${this.name} moved \${distanceInMeters}m.\`)
   }
-
-
-
+}
+class Snake extends Animal {
+  constructor(name: string) { super(name); }
+  move(distanceInMeters = 5) {
+      console.log("Slithering...");
+      super.move(distanceInMeters);
+  }
+}`,
+      codeValue: `import { tsquery } from '@phenomnomnominal/tsquery';
+function main(source: string, log: (m: string) => void): string | void {
+  const ast = tsquery.ast(source);
+  const nodes = tsquery(ast, 'Identifier[name="Animal"]');
+  log(\`Identifier[name="Animal"] count: \${nodes.length}\`);
+}`
+    }
 
 
 ]

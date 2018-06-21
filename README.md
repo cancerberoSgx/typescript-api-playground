@@ -1,6 +1,6 @@
 # TypeScript Compiler API online editor
 
-Play with TypeScript compiler (and others) APIs online: [TypeScript Compiler API online playground](https://online-typescript-api-editor.glitch.me/)
+Play with TypeScript compiler (and others) APIs online: [TypeScript Compiler API online playground](https://typescript-api-playground.glitch.me/)
 
 (WIP)
 
@@ -10,7 +10,7 @@ Basically is a server side node.js application that let the user input two TypeS
 
  * It has lots of working examples using different TypeScript APIs and related libraries. 
 
- * Thanks to glitch infrastructure is online! https://online-typescript-api-editor.glitch.me/
+ * Thanks to glitch infrastructure is online! https://typescript-api-playground.glitch.me/
 
  * Easily run in local host: `npm install && npm start & ; firefox localhost:8080`
 
@@ -22,6 +22,8 @@ Basically is a server side node.js application that let the user input two TypeS
 # TODO
 
  * user being able to save / load its work - cheap solution like typescript playground use url parameters as source code input. 
+
+ * some specs - like run server and post something to /run and expect some answer. In particular example code with string templates and differen template quotes  like this: tsquery simple example
 
 
 # Notes / difficulties / learning
