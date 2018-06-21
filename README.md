@@ -19,23 +19,6 @@ Basically is a server side node.js application that let the user input two TypeS
  * The idea is being able to point to users to these examples so they can play online with them when asking for help. 
 
 
-# TODO
-
- * user being able to save / load its work - cheap solution like typescript playground use url parameters as source code input. Maybe a list in the server  in a file ? 
-
- * Production , performance, security: we are eval() and compiling / rendering templates on each request for fast development - we need a production mode that dont do this, caches everything in memory. 
- 
-  * make some specs - like run server and post something to /run and expect some answer. In particular example code with string templates and different template quotes  like this: tsquery simple example
-
-  * a help dialog or alert with minimal instructions
-
-  * better example tagging and sorting
-
- * typechecking example using createProgram
-
- * nice idea: from input editor pass current cursor position / selected text range to main() so we can refactor it!
-
- * when selecting example reflect the change in the url
 
 
 # Notes / difficulties / learning
@@ -55,3 +38,28 @@ declare module "typescript"{
  * tsquery.d.ts : had to run the following to join all .d.ts in one file :
   
   ```dts-generator --name tsquery --out package-name.d.ts --project /home/sg/git/tsquery```
+
+
+
+# TODO
+
+ * user being able to save / load its work - cheap solution like typescript playground use url parameters as source code input. Maybe a list in the server  in a file ? 
+
+  * make some specs - like run server and post something to /run and expect some answer. In particular example code with string templates and different template quotes  like this: tsquery simple example
+
+  * a help dialog or alert with minimal instructions
+
+  * better example tagging and sorting
+
+ * typechecking example using createProgram
+
+ * nice idea: from input editor pass current cursor position / selected text range to main() so we can refactor it!
+
+ * when selecting example reflect the change in the url
+
+
+
+# Dones : 
+
+ * Production , performance, security: we are eval() and compiling / rendering templates on each request for fast development - we need a production mode that dont do this, caches everything in memory. 
+ 

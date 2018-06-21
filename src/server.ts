@@ -34,6 +34,7 @@ function onRequest(request, response) {
     response.end()
   }
 }
+
 console.log('Server listening at ' + url);
 
 http.createServer(onRequest).listen(port)

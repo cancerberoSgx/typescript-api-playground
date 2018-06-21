@@ -226,6 +226,14 @@ function main(source: string, log: (m: string) => void): string | void {
       replaceInputEditorContentWithReturnValue: true,
       inputValue: readFileSync('./assets/examples/tsa-rename-test1/input.ts').toString(),
       codeValue: readFileSync('./assets/examples/tsa-rename-test1/code.ts').toString()
+    },
+
+    {
+      name: 'ts-type-checking-source',
+      description: 'walk the AST and use the checker to serialize class information. Use the type checker to get symbol and type information, while grabbing JSDoc comments for exported classes, their constructors, and respective constructor parameters. Example adapted from <a href="https://github.com/Microsoft/TypeScript/wiki/Using-the-Compiler-API#using-the-type-checker">TypeScript Compiler API docs</a>',
+      replaceInputEditorContentWithReturnValue: true,
+      inputValue: readFileSync('./assets/examples/ts-type-checking-source/input.ts').toString(),
+      codeValue: readFileSync('./assets/examples/ts-type-checking-source/code.ts').toString()
     }
   ]
 
