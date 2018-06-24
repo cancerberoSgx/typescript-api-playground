@@ -57,6 +57,8 @@ declare module "typescript"{
 
  * when selecting example reflect the change in the url
 
+ * example of transpile -> transformation
+
 
 
 # Dones : 
