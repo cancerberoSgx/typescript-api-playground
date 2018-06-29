@@ -1,12 +1,12 @@
 # TypeScript Compiler API online editor
 
-Play with TypeScript compiler (and others) APIs online: [TypeScript Compiler API online playground](https://typescript-api-playground.glitch.me/)
+ * Play with TypeScript compiler (and others) APIs online: [TypeScript Compiler API online playground](https://typescript-api-playground.glitch.me/)
+ * [glitch development page](https://glitch.com/edit/#!/typescript-api-playground) 
 
-(WIP)
 
 # Objectives / Features
 
-Basically is a server side node.js application that let the user input two TypeScript source files, one is its program using TypeScript compiler APIs and others, and the second is an example TypeScript source file that will be manipulated by the first program. Then the Program is evaluated server-side and the results are printed back to the browser (proabbly modifying the example source file)
+Basically is a server side node.js application that let the user input two TypeScript source files, one is its program using TypeScript compiler APIs and others, and the second is an example TypeScript source file that will be manipulated by the first program. Then the Program is evaluated server-side and the results are printed back to the browser (probably modifying the example source file)
 
  * It has lots of working examples using different TypeScript APIs and related libraries. 
 
