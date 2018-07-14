@@ -1,3 +1,4 @@
+
 var typeScriptCodeEditor, exampleCodeEditor
  
 
@@ -16,8 +17,10 @@ function changeExample(name){
   location.hash=`example=${encodeURIComponent(example.name)}`
   typeScriptCodeRun()
 }
-
+const hashEditorInputPrefix = '__editor_input__='
+const hashEditorCodePrefix = '__editor_code__='
 let example
+
 function setExampleFromUrlParameter(){
   const url = new URL(location.href)
 
@@ -30,11 +33,19 @@ function setExampleFromUrlParameter(){
 
   example = codeExamples.find(e=>decodeURIComponent(url.hash.split('#example=').length===2 ? url.hash.split('#example=')[1] : '')===e.name)
   if(example){return}
-  
-  if(!example){
-    alert('Example '+exampleIndex+' not found - showing default example'); 
-    example = codeExamples[0]
+
+  const code = url.hash.includes(hashEditorCodePrefix) ? url.hash.substring(url.hash.indexOf(hashEditorCodePrefix)+hashEditorCodePrefix.length, url.hash.includes(hashEditorInputPrefix) ? url.hash.indexOf(hashEditorInputPrefix) : url.hash.length) : undefined
+  let input = code && url.hash.includes(hashEditorInputPrefix) ? url.hash.substring(url.hash.indexOf(hashEditorInputPrefix)+hashEditorInputPrefix.length, url.hash.length) : undefined
+  if(code){
+    example = {
+      name: 'custom example', 
+      description: 'custom example - data came from url', 
+      inputValue: decodeURIComponent(input || ''),
+      codeValue: decodeURIComponent(code)
+    }
+    return 
   }
+  example = codeExamples[0]
 }
 
 function setWorkingAnimation(working){
@@ -42,6 +53,11 @@ function setWorkingAnimation(working){
 }
 
 
+function buildUrl() {
+  const code = encodeURIComponent(typeScriptCodeEditor.getValue())
+  const input = encodeURIComponent(exampleCodeEditor.getValue())
+  location.hash = hashEditorCodePrefix + code + hashEditorInputPrefix + input
+}
 
 
 
@@ -89,6 +105,7 @@ function typeScriptCodeRun(){
   })
   
 }
+
 function formatResult(text){
   let result 
   try {
@@ -117,6 +134,7 @@ ${result.err.join('\n')}
 `
   }
 }
+
 
 
 // editor creation / configuration
@@ -157,7 +175,9 @@ require(["vs/editor/editor.main"], function () {
   exampleCodeEditor = monaco.editor.create(exampleCodeContainer, Object.assign(editorOptions, {value: example.inputValue}))
   installResizeWatcher(exampleCodeContainer, exampleCodeEditor.layout.bind(exampleCodeEditor), 2000)
 
-  typeScriptCodeRun()
+  if(example.autoRun){
+    typeScriptCodeRun()
+  }
 })
 
 function installResizeWatcher(el, fn, interval){

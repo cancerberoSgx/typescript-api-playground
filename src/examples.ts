@@ -11,6 +11,7 @@ export function getExamples() {
   codeExamples = [
     {
       name: 'TypeScript scanner',
+      autoRun: true,
       description: 'Not very useful but shows Scanned API. Taken from <a href="https://basarat.gitbooks.io/typescript/content/docs/compiler/scanner.html">TypeScript book</a>',
       inputValue: `class A {
   color: string
@@ -190,6 +191,7 @@ function main(source: string, log: (m: string) => void): string {
 
     {
       name: 'tsquery simple example',
+      autoRun: true,
       description: 'Using <a href="https://github.com/phenomnomnominal/tsquery">tsquery library</a> to count Identifiers with a certain name',
       inputValue: `class Animal {
   constructor(public name: string) { }
@@ -215,6 +217,7 @@ function main(source: string, log: (m: string) => void): string | void {
     {
       name: 'Creating a ts.Program and SourceFile in memory for testing without file system',
       description: 'Ideal for testing or using APIs in memory. Also, a small mostration on how to navegate the AST',
+      autoRun: true,
       inputValue: readFileSync('./assets/examples/ts-create-program-without-fs/input.ts').toString(),
       codeValue: readFileSync('./assets/examples/ts-create-program-without-fs/code.ts').toString()
     },
@@ -240,10 +243,20 @@ function main(source: string, log: (m: string) => void): string | void {
       name: 'tsquery support for ts-simple-ast',
       description: 'Using ts-simple-ast and tsquery together : https://gist.github.com/dsherret/826fe77613be22676778b8c4ba7390e7',
       // replaceInputEditorContentWithReturnValue: true,
-      inputValue: '',//readFileSync('./assets/examples/tsa-rename-test1/input.ts').toString(),
-      codeValue: readFileSync('./assets/examples/tsSimpleAstAndTsQuery/tsaAndtsqueryTogether.ts').toString()
+      autoRun: true,
+      inputValue: readFileSync('./assets/examples/tsSimpleAstAndTsQuery/input.ts').toString(),
+      codeValue: readFileSync('./assets/examples/tsSimpleAstAndTsQuery/code.ts').toString()
     }, 
-  ]
+  ] as Example[]
 
   return codeExamples
 } 
+
+export interface Example {
+  name: string, 
+  description: string,
+  inputValue: string, 
+  codeValue: string,
+  replaceInputEditorContentWithReturnValue?: boolean
+  autoRun?: boolean
+}
