@@ -1,14 +1,16 @@
 import http from 'http'
 
 import { runTs } from './runTs'
-import { getTemplates, getTemplatesContext } from './templates'
-import { port, url } from './config'
+import { getTemplates, getTemplatesContext, renderTemplate } from './templates'
+import { port, url, mode } from './config'
+
+console.log('mode is '+mode)
 
 function onRequest(request, response) {
   const templates = getTemplates()
   const templatesContext = getTemplatesContext()
   if (request.url === '/editor.js') {
-    const result = templates.editorJs(templatesContext)
+    const result = renderTemplate('editorJs', templatesContext)
     response.writeHead(200, { "Content-Type": "text/javascript" })
     response.write(result)
     response.end()
@@ -29,7 +31,7 @@ function onRequest(request, response) {
   }
   else {
     response.writeHead(200, { "Content-Type": "text/html" })
-    const result = templates.indexHtml(templatesContext)
+    const result = renderTemplate('indexHtml', templatesContext)
     response.write(result)
     response.end()
   }

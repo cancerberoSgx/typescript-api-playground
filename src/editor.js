@@ -15,7 +15,9 @@ function changeExample(name){
   typeScriptCodeEditor.setValue(example.codeValue)
   exampleCodeEditor.setValue(example.inputValue)
   location.hash=`example=${encodeURIComponent(example.name)}`
-  typeScriptCodeRun()
+  if(example.autoRun){
+    typeScriptCodeRun()
+  }
 }
 const hashEditorInputPrefix = '__editor_input__='
 const hashEditorCodePrefix = '__editor_code__='

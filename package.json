@@ -13,6 +13,7 @@
   "dependencies": {
     "@phenomnomnominal/tsquery": "^2.0.0-beta.5",
     "handlebars": "^4.0.11",
+    "minify-fast": "0.11.1",
     "ts-simple-ast": "12.5.4",
     "typescript": "2.9.2"
   },
