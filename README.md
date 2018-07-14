@@ -59,6 +59,8 @@ declare module "typescript"{
 
  * example of transpile -> transformation
 
+ * add candomed
+
 
 
 # Dones : 

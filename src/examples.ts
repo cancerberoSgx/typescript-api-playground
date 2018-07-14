@@ -189,7 +189,6 @@ function main(source: string, log: (m: string) => void): string {
     },
 
     {
-
       name: 'tsquery simple example',
       description: 'Using <a href="https://github.com/phenomnomnominal/tsquery">tsquery library</a> to count Identifiers with a certain name',
       inputValue: `class Animal {
@@ -234,7 +233,16 @@ function main(source: string, log: (m: string) => void): string | void {
       replaceInputEditorContentWithReturnValue: true,
       inputValue: readFileSync('./assets/examples/ts-type-checking-source/input.ts').toString(),
       codeValue: readFileSync('./assets/examples/ts-type-checking-source/code.ts').toString()
-    }
+    },
+
+
+    {
+      name: 'tsquery support for ts-simple-ast',
+      description: 'Using ts-simple-ast and tsquery together : https://gist.github.com/dsherret/826fe77613be22676778b8c4ba7390e7',
+      // replaceInputEditorContentWithReturnValue: true,
+      inputValue: '',//readFileSync('./assets/examples/tsa-rename-test1/input.ts').toString(),
+      codeValue: readFileSync('./assets/examples/tsSimpleAstAndTsQuery/tsaAndtsqueryTogether.ts').toString()
+    }, 
   ]
 
   return codeExamples

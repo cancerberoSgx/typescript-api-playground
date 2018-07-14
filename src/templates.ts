@@ -21,7 +21,8 @@ export function getTemplatesContext() {
   if (!context || mode === 'development') {
     context = {
       libs: libs.map(l => JSON.stringify([readFileSync(`./assets/declarations/${l}`).toString(), `libs/${l}`])),
-      examples, examplesString: JSON.stringify(examples)
+      examples, 
+      examplesString: JSON.stringify(examples)
     }
   }
   return context

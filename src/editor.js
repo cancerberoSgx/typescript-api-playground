@@ -13,15 +13,30 @@ function changeExample(name){
   example = found
   typeScriptCodeEditor.setValue(example.codeValue)
   exampleCodeEditor.setValue(example.inputValue)
+  location.hash=`example=${encodeURIComponent(example.name)}`
+  typeScriptCodeRun()
 }
+
 let example
 function setExampleFromUrlParameter(){
-  const exampleIndex = parseInt(new URL(location.href).searchParams.get("example")||'0', 10)||0
-  example = codeExamples[exampleIndex]
+  const url = new URL(location.href)
+
+  const exampleIndex = url.searchParams.get("example")|| undefined
+    example = exampleIndex!==undefined ? codeExamples[exampleIndex] : undefined
+  if(example){return}
+
+  example = codeExamples.find(e=>decodeURIComponent(url.searchParams.get("example"))===e.name)
+  if(example){return}
+
+  example = codeExamples.find(e=>decodeURIComponent(url.hash.split('#example=').length===2 ? url.hash.split('#example=')[1] : '')===e.name)
+  if(example){return}
+  
   if(!example){
-    alert('Example '+exampleIndex+' not found - showing default example'); example = codeExamples[0]
+    alert('Example '+exampleIndex+' not found - showing default example'); 
+    example = codeExamples[0]
   }
 }
+
 function setWorkingAnimation(working){
   document.getElementById('working-animation').style.display = working ? 'inline-block' : 'none'
 }
@@ -109,13 +124,7 @@ ${result.err.join('\n')}
 require(["vs/editor/editor.main"], function () {
   
   setExampleFromUrlParameter()
-    
-  // validation settings
-  // monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
-    // noSemanticValidation: false,
-    // noSyntaxValidation: false
-  // })
-
+  
   // compiler options
   monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
     target: monaco.languages.typescript.ScriptTarget.ES6,
@@ -147,6 +156,8 @@ require(["vs/editor/editor.main"], function () {
   const exampleCodeContainer = document.getElementById('exampleCodeContainer')
   exampleCodeEditor = monaco.editor.create(exampleCodeContainer, Object.assign(editorOptions, {value: example.inputValue}))
   installResizeWatcher(exampleCodeContainer, exampleCodeEditor.layout.bind(exampleCodeEditor), 2000)
+
+  typeScriptCodeRun()
 })
 
 function installResizeWatcher(el, fn, interval){
