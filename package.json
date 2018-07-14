@@ -1,5 +1,5 @@
 {
-  "name": "typescript-api-online-editor",
+  "name": "typescript-api-playground",
   "version": "0.0.3",
   "description": "TypeScript compiler API and others online playground: https://typescript-api-playground.glitch.me/",
   "scripts": {
@@ -11,14 +11,14 @@
   "repository": "https://github.com/cancerberoSgx/typescript-api-playground",
   "license": "MIT",
   "dependencies": {
-    "@phenomnomnominal/tsquery": "^2.0.0-beta.4",
+    "@phenomnomnominal/tsquery": "^2.0.0-beta.5",
     "handlebars": "^4.0.11",
-    "ts-simple-ast": "12.4.0",
+    "ts-simple-ast": "12.5.4",
     "typescript": "2.9.2"
   },
   "devDependencies": {
-    "ts-node": "^6.1.0",
-    "@types/node": "^10.0.4"
+    "@types/node": "^10.5.2",
+    "ts-node": "^7.0.0"
   },
   "keywords": [
     "node",
